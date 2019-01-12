@@ -37,6 +37,11 @@ const Auth = {
     requests.put('/user', { user })
 };
 
+const Contact = {
+  email: (subject, email, message) =>
+  requests.post('/contact/', { body: JSON.stringify({subject, email, message}) }),
+};
+
 const Tags = {
   getAll: () => requests.get('/tags')
 };
@@ -92,5 +97,6 @@ export default {
   Comments,
   Profile,
   Tags,
+  Contact,
   setToken: _token => { token = _token; }
 };

@@ -150,3 +150,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
 }
+EMAIL_BACKEND = 'sgbackend.SendGridBackend'
+SENDGRID_API_KEY = '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'
+
