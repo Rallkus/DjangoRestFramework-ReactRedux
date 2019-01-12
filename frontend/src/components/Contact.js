@@ -49,7 +49,7 @@ class Contact extends React.Component {
 
   render() {
     const errors = (!this.props.subjectIsValid || !this.props.emailIsValid || !this.props.messageIsValid);
-    console.log(errors);
+
     return (
       <div className="auth-page">
         <div className="container page">
@@ -95,6 +95,7 @@ class Contact extends React.Component {
                     disabled={(errors && this.props.submittedAtLeastOnce) || this.props.submitting }>
                     Send!
                   </button>
+                  <ToastContainer position={ToastContainer.POSITION.TOP_RIGHT} store={ToastStore}/>
 
                 </fieldset>
               </form>

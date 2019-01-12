@@ -18,7 +18,8 @@ const INITIAL_STATE = {
 	emailIsValid:false,
 	subjectIsValid:false,
 	messageIsValid:false,
-	submittedAtLeastOnce:false
+	submittedAtLeastOnce:false,
+	toastError:true
 };
 const validate = "IsValid";
 
@@ -26,6 +27,7 @@ export default function(state = INITIAL_STATE, action) {
 	switch (action.type) {
 		case SEND:
 			return { ...state,
+				toastError:true,
 				submittedAtLeastOnce:true };
 		case UPDATE_FORM_CONTACT:
 			switch(action.key){
@@ -49,13 +51,15 @@ export default function(state = INITIAL_STATE, action) {
 				 [action.key]: action.value,
 				 [action.key+validate]: action.validate};
 		case EMAIL:
-			return { ...state};
+			return { ...state,
+			toastError:false};
 
 		case ASYNC_START:
 			if (action.subtype === EMAIL) {
 				return { ...state, submitting: true,
 					submittedAtLeastOnce:true };
 			}
+			return {...state};
 			break;
 
 		case ASYNC_END:
