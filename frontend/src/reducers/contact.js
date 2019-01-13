@@ -60,7 +60,6 @@ export default function(state = INITIAL_STATE, action) {
 					submittedAtLeastOnce:true };
 			}
 			return {...state};
-			break;
 
 		case ASYNC_END:
 			return { ...state, submitting: false };
