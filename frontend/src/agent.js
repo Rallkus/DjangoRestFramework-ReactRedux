@@ -38,7 +38,7 @@ const Auth = {
 };
 
 const Contact = {
-  email: (subject, email, message) =>
+  sendingFormToBackend: (subject, email, message) =>
   requests.post('/contact/', { body: JSON.stringify({subject, email, message}) }),
 };
 

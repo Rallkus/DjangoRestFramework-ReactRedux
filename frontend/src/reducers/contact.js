@@ -1,10 +1,10 @@
 import {
 	UPDATE_FORM_CONTACT,
-	EMAIL,
+	SEND_TO_BACKEND,
 	CONTACT_PAGE_UNLOADED,
 	ASYNC_START,
 	ASYNC_END,
-	SEND
+	SUBMIT_WITH_ERRORS
 } from "../constants/actionTypes";
 
 const INITIAL_STATE = {
@@ -19,15 +19,13 @@ const INITIAL_STATE = {
 	subjectIsValid:false,
 	messageIsValid:false,
 	submittedAtLeastOnce:false,
-	toastError:true
 };
 const validate = "IsValid";
 
 export default function(state = INITIAL_STATE, action) {
 	switch (action.type) {
-		case SEND:
+		case SUBMIT_WITH_ERRORS:
 			return { ...state,
-				toastError:true,
 				submittedAtLeastOnce:true };
 		case UPDATE_FORM_CONTACT:
 			switch(action.key){
@@ -50,12 +48,12 @@ export default function(state = INITIAL_STATE, action) {
 			return { ...state,
 				 [action.key]: action.value,
 				 [action.key+validate]: action.validate};
-		case EMAIL:
+		case SEND_TO_BACKEND:
 			return { ...state,
 			toastError:false};
 
 		case ASYNC_START:
-			if (action.subtype === EMAIL) {
+			if (action.subtype === SEND_TO_BACKEND) {
 				return { ...state, submitting: true,
 					submittedAtLeastOnce:true };
 			}

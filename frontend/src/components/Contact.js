@@ -9,9 +9,9 @@ import agent from '../agent';
 import { connect } from 'react-redux';
 import {
   UPDATE_FORM_CONTACT,
-  EMAIL,
+  SEND_TO_BACKEND,
   CONTACT_PAGE_UNLOADED,
-  SEND
+  SUBMIT_WITH_ERRORS
 } from '../constants/actionTypes';
 
 const mapStateToProps = state => ({ ...state.contact });
@@ -24,8 +24,13 @@ const mapDispatchToProps = dispatch => ({
   onChangeEmail: value =>
     dispatch({ type: UPDATE_FORM_CONTACT, key: 'email', value }),
   onSubmit: (username, email, password, errors) => {
-    const payload = agent.Contact.email(username, email, password);
-    errors? dispatch({ type: SEND }) : dispatch({ type: EMAIL, payload });
+    if(errors){
+      console.log(errors);
+      dispatch({ type: SUBMIT_WITH_ERRORS })
+    }else{
+      agent.Contact.sendingFormToBackend(username, email, password);
+      dispatch({ type: SEND_TO_BACKEND });
+    }
   },
   onUnload: () =>
     dispatch({ type: CONTACT_PAGE_UNLOADED })
