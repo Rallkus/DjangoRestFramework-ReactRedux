@@ -19,6 +19,7 @@ const INITIAL_STATE = {
 	subjectIsValid:false,
 	messageIsValid:false,
 	submittedAtLeastOnce:false,
+	backendErrors:false
 };
 const validate = "IsValid";
 
@@ -50,7 +51,7 @@ export default function(state = INITIAL_STATE, action) {
 				 [action.key+validate]: action.validate};
 		case SEND_TO_BACKEND:
 			return { ...state,
-			toastError:false};
+				backendErrors: action.error ? action.payload.errors : null};
 
 		case ASYNC_START:
 			if (action.subtype === SEND_TO_BACKEND) {
