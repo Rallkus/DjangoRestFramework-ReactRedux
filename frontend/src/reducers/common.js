@@ -15,6 +15,7 @@ import {
   SETTINGS_PAGE_UNLOADED,
   LOGIN_PAGE_UNLOADED,
   REGISTER_PAGE_UNLOADED,
+  REDIRECT_HOME
 } from '../constants/actionTypes';
 
 const defaultState = {
@@ -25,6 +26,12 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case REDIRECT_HOME:
+      return{
+        ...state,
+        redirectTo:'/'
+      }
+    
     case APP_LOAD:
       return {
         ...state,

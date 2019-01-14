@@ -1,11 +1,13 @@
 import {
 	UPDATE_FORM_CONTACT,
-	SEND_TO_BACKEND,
+	CONTACT,
 	CONTACT_PAGE_UNLOADED,
 	ASYNC_START,
 	ASYNC_END,
 	SUBMIT_WITH_ERRORS
 } from "../constants/actionTypes";
+
+const backendErr = {"message":false, "email":false, "subject":false};
 
 const INITIAL_STATE = {
 	submitting: false,
@@ -19,7 +21,8 @@ const INITIAL_STATE = {
 	subjectIsValid:false,
 	messageIsValid:false,
 	submittedAtLeastOnce:false,
-	backendErrors:false
+	backendErrors:backendErr,
+	submitted:false
 };
 const validate = "IsValid";
 
@@ -48,13 +51,17 @@ export default function(state = INITIAL_STATE, action) {
 			}
 			return { ...state,
 				 [action.key]: action.value,
-				 [action.key+validate]: action.validate};
-		case SEND_TO_BACKEND:
-			return { ...state,
-				backendErrors: action.error ? action.payload.errors : null};
+				 [action.key+validate]: action.validate,
+				backendErrors:backendErr,
+				submitted:false};
+		case CONTACT:
+			return {
+				...state,
+				backendErrors: action.payload.errors? action.payload.errors : backendErr,
+				submitted:true};
 
 		case ASYNC_START:
-			if (action.subtype === SEND_TO_BACKEND) {
+			if (action.subtype === CONTACT) {
 				return { ...state, submitting: true,
 					submittedAtLeastOnce:true };
 			}
@@ -64,7 +71,7 @@ export default function(state = INITIAL_STATE, action) {
 			return { ...state, submitting: false };
 
 		case CONTACT_PAGE_UNLOADED:
-			  return {};
+			  return INITIAL_STATE;
 			  
 		default:
 			return state;

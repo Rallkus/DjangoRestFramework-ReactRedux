@@ -9,14 +9,17 @@ import agent from '../agent';
 import { connect } from 'react-redux';
 import {
   UPDATE_FORM_CONTACT,
-  SEND_TO_BACKEND,
+  CONTACT,
   CONTACT_PAGE_UNLOADED,
-  SUBMIT_WITH_ERRORS
+  SUBMIT_WITH_ERRORS,
+  REDIRECT_HOME
 } from '../constants/actionTypes';
 
 const mapStateToProps = state => ({ ...state.contact });
 
 const mapDispatchToProps = dispatch => ({
+  onRedirectToHome: () => 
+    dispatch({ type: REDIRECT_HOME }),
   onChangeSubject: value =>
     dispatch({ type: UPDATE_FORM_CONTACT, key: 'subject', value }),
   onChangeMessage: value =>
@@ -28,9 +31,9 @@ const mapDispatchToProps = dispatch => ({
       console.log(errors);
       dispatch({ type: SUBMIT_WITH_ERRORS })
     }else{
-      agent.Contact.sendingFormToBackend(username, email, password);
-      dispatch({ type: SEND_TO_BACKEND });
-    }
+      const payload=agent.Contact.sendingFormToBackend(username, email, password);
+      dispatch({ type: CONTACT, payload });
+    } 
   },
   onUnload: () =>
     dispatch({ type: CONTACT_PAGE_UNLOADED })
@@ -39,6 +42,7 @@ const mapDispatchToProps = dispatch => ({
 class Contact extends React.Component {
   constructor() {
     super();
+    this.redirectToHome = () => this.props.onRedirectToHome();
     this.changeSubject = ev => this.props.onChangeSubject(ev.target.value);
     this.changeMessage = ev => this.props.onChangeMessage(ev.target.value);
     this.changeEmail = ev => this.props.onChangeEmail(ev.target.value);
@@ -48,13 +52,21 @@ class Contact extends React.Component {
     }
   }
 
-  componentWillUnmount() {
+  componentDidMount(){
     this.props.onUnload();
+  }
+  componentDidUpdate(){
+    const success = (!this.props.backendErrors['subject'] && !this.props.backendErrors['email'] && !this.props.backendErrors['message']) && this.props.submitted;
+    if(success){
+      ToastStore.success('Email was send!', 2000);
+      setTimeout(() => {
+        this.redirectToHome();
+      }, 2000);
+    }
   }
 
   render() {
     const errors = (!this.props.subjectIsValid || !this.props.emailIsValid || !this.props.messageIsValid);
-
     return (
       <div className="auth-page">
         <div className="container page">
@@ -66,7 +78,8 @@ class Contact extends React.Component {
 
               <form onSubmit={this.submitForm(this.props.subject, this.props.email, this.props.message, errors)}>
                 <fieldset>
-                <p hidden={!this.props.submittedAtLeastOnce || this.props.subjectIsValid} ><font size="3" color="red">You have not introduced a subject!</font></p>
+                <p hidden={(!this.props.submittedAtLeastOnce ||  !this.props.subjectIsValid) || !this.props.backendErrors['subject']} ><font size="3" color="red">You have not introduced a subject!</font></p>
+                <p hidden={!this.props.submittedAtLeastOnce ||  this.props.subjectIsValid} ><font size="3" color="red">You have not introduced a subject!</font></p>
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
@@ -75,7 +88,8 @@ class Contact extends React.Component {
                       value={this.props.subject}
                       onChange={this.changeSubject} />
                   </fieldset>
-                  <p hidden={!this.props.submittedAtLeastOnce || this.props.emailIsValid} ><font size="3" color="red">You have not introduced a valid email!</font></p>
+                  <p hidden={(!this.props.submittedAtLeastOnce || !this.props.emailIsValid) || !this.props.backendErrors['email']} ><font size="3" color="red">You have not introduced a valid email!</font></p>
+                  <p hidden={!this.props.submittedAtLeastOnce || this.props.emailIsValid } ><font size="3" color="red">You have not introduced a valid email!</font></p>
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
@@ -85,6 +99,7 @@ class Contact extends React.Component {
                       onChange={this.changeEmail}
                        />
                   </fieldset>
+                  <p hidden={(!this.props.submittedAtLeastOnce || !this.props.messageIsValid) || !this.props.backendErrors['message']} ><font size="3" color="red">Messages have to have at least 20 characters!</font></p>
                   <p hidden={!this.props.submittedAtLeastOnce || this.props.messageIsValid} ><font size="3" color="red">Messages have to have at least 20 characters!</font></p>
                   <fieldset className="form-group">
                     <textarea
@@ -97,11 +112,10 @@ class Contact extends React.Component {
                   <button
                     className="btn btn-lg btn-primary pull-xs-right"
                     type="submit"
-                    disabled={(errors && this.props.submittedAtLeastOnce) || this.props.submitting }>
+                    disabled={(errors && this.props.submittedAtLeastOnce) || (this.props.submitting || this.props.submitted)}>
                     Send!
                   </button>
                   <ToastContainer position={ToastContainer.POSITION.TOP_RIGHT} store={ToastStore}/>
-
                 </fieldset>
               </form>
             </div>
