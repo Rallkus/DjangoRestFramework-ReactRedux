@@ -1,9 +1,9 @@
-/**
- * More info about react-toasts
- * https://www.npmjs.com/package/react-toasts
- */
 
-import {ToastContainer, ToastStore} from 'react-toasts';
+/**
+ * More info about this toastr
+ * https://www.npmjs.com/package/react-redux-toastr
+ */
+import {toastr} from 'react-redux-toastr'
 import React from 'react';
 import agent from '../agent';
 import { connect } from 'react-redux';
@@ -58,10 +58,8 @@ class Contact extends React.Component {
   componentDidUpdate(){
     const success = (!this.props.backendErrors['subject'] && !this.props.backendErrors['email'] && !this.props.backendErrors['message']) && this.props.submitted;
     if(success){
-      ToastStore.success('Email was send!', 2000);
-      setTimeout(() => {
-        this.redirectToHome();
-      }, 2000);
+      toastr.success('Success!', 'Your message has been sent!');
+      this.redirectToHome();
     }
   }
 
@@ -115,7 +113,6 @@ class Contact extends React.Component {
                     disabled={(errors && this.props.submittedAtLeastOnce) || (this.props.submitting || this.props.submitted)}>
                     Send!
                   </button>
-                  <ToastContainer position={ToastContainer.POSITION.TOP_RIGHT} store={ToastStore}/>
                 </fieldset>
               </form>
             </div>

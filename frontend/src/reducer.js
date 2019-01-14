@@ -8,6 +8,7 @@ import home from './reducers/home';
 import contact from './reducers/contact';
 import profile from './reducers/profile';
 import settings from './reducers/settings';
+import {reducer as toastrReducer} from 'react-redux-toastr'
 import { routerReducer } from 'react-router-redux';
 
 export default combineReducers({
@@ -20,5 +21,6 @@ export default combineReducers({
   home,
   profile,
   settings,
-  router: routerReducer
+  router: routerReducer,
+  toastr: toastrReducer
 });
