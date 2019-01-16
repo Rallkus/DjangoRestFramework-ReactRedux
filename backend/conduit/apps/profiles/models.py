@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib import admin
 from conduit.apps.core.models import TimestampedModel
 
 

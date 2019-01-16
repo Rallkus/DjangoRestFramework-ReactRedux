@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^api/', include('conduit.apps.authentication.urls', namespace='authentication')),
     url(r'^api/', include('conduit.apps.profiles.urls', namespace='profiles')),
     url(r'^api/', include('conduit.apps.contact.urls', namespace='contact')),
+    url(r'^api/', include('conduit.apps.personalTrainer.urls', namespace='contact')),
 ]
