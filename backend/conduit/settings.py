@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'conduit.apps.core',
     'conduit.apps.profiles',
     'conduit.apps.personalTrainer',
+    'conduit.apps.player',
+    'conduit.apps.card',
 ]
 
 MIDDLEWARE = [
