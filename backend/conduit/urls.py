@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^api/', include('conduit.apps.personalTrainer.urls', namespace='personalTrainer')),
     url(r'^api/', include('conduit.apps.player.urls', namespace='player')),
     url(r'^api/', include('conduit.apps.card.urls', namespace='card')),
+    url(r'^api/', include('conduit.apps.deck.urls', namespace='deck')),
 ]

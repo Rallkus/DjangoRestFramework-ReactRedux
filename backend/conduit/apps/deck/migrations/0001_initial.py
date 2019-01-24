@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -10,18 +11,22 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('card', '0001_initial'),
+        ('player', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Card',
+            name='Deck',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('slug', models.SlugField(max_length=255, unique=True)),
                 ('image', models.URLField(blank=True)),
-                ('text', models.CharField(max_length=255)),
+                ('name', models.CharField(max_length=255)),
+                ('cards', models.ManyToManyField(related_name='cards', to='card.Card')),
+                ('player', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='decks', to='player.Player')),
             ],
             options={
                 'ordering': ['-created_at', '-updated_at'],
